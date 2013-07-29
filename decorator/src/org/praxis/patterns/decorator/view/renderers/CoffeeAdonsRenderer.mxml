@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:MXAdvancedDataGridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+								  xmlns:s="library://ns.adobe.com/flex/spark" 
+								  xmlns:mx="library://ns.adobe.com/flex/mx" 
+								  focusEnabled="true">
+
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			
+			import org.praxis.patterns.decorator.concretec.Milk;
+			import org.praxis.patterns.decorator.concretec.Mocha;
+			import org.praxis.patterns.decorator.concretec.Soy;
+			import org.praxis.patterns.decorator.concretec.Whip;
+			import org.praxis.patterns.decorator.core.Beverage;
+			import org.praxis.patterns.decorator.core.CondimentDecorator;
+			import org.praxis.patterns.decorator.utils.Constants;
+			import org.praxis.patterns.decorator.view.StarBuzzGrid;
+			protected function clickHandler(event:MouseEvent):void
+			{
+				var owner:StarBuzzGrid = listData.owner as StarBuzzGrid;
+				var addon:String = owner.columns[listData.columnIndex].headerText as String;
+				var decorator:CondimentDecorator
+				  switch(addon)	{
+					case Constants.MILK : 
+						decorator = new Milk(this.data.beverage);
+						break;
+					case Constants.MOCHA : 
+						decorator = new Mocha(this.data.beverage);
+						break;
+					case Constants.SOY : 
+						decorator = new Soy(this.data.beverage);
+						break;
+					case Constants.WHIP : 
+						decorator = new Whip(this.data.beverage);
+						break;
+				}
+				Alert.show("Class '"+this.data.beverage.getDescription()+"' is being deocorated with '"+ addon +"' decorator class","Decorated "+this.data.beverage.getDescription()+" with "+addon+"!");
+				this.data.beverage = decorator;  
+				lblData.enabled = false;
+			}
+		]]>
+	</fx:Script>
+
+	<!--<s:Label id="lblData" top="0" left="0" right="0" bottom="0" text="{listData.label}" />-->
+	<s:CheckBox id="lblData"  label="{listData.label}" top="2" left="{(this.width/2)-(10)}" right="2" bottom="2" click="clickHandler(event)"/>
+</s:MXAdvancedDataGridItemRenderer>

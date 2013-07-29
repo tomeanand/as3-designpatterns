@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600" 
+			   creationComplete="creationCompleteHandler(event)" xmlns:view="org.praxis.patterns.decorator.view.*" viewSourceURL="srcview/index.html">
+	
+	
+	<fx:Style source="assets/css/decoratorStyle.css"/>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			
+			import org.praxis.patterns.decorator.concretec.CoffeeListData;
+			import org.praxis.patterns.decorator.concretec.Milk;
+			import org.praxis.patterns.decorator.concretec.Mocha;
+			import org.praxis.patterns.decorator.core.Beverage;
+			import org.praxis.patterns.decorator.core.CondimentDecorator;
+			import org.praxis.patterns.decorator.core.DarkRoast;
+			import org.praxis.patterns.decorator.core.Decaf;
+			import org.praxis.patterns.decorator.core.Espresso;
+			import org.praxis.patterns.decorator.core.HosueBlend;
+			import org.praxis.patterns.decorator.utils.Constants;
+			
+			[Bindable]
+			private var coffeeList:ArrayCollection = new ArrayCollection();
+
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				
+				
+				var beverage1:Beverage = new Espresso();
+				trace("beverage1 "+beverage1.cost() +"  :  "+beverage1.getDescription());
+				
+				var beverage2:Beverage = new HosueBlend();
+				trace("beverage2 "+beverage2.cost() +"  :  "+beverage2.getDescription());
+				
+				var mocha:CondimentDecorator = new Mocha(beverage2);
+				trace("mocha "+mocha.cost() +"  :  "+mocha.getDescription());
+				
+				var espressoMocha:CondimentDecorator = new Milk(mocha);
+				trace("espressoMocha "+espressoMocha.cost() +"  :  "+espressoMocha.getDescription());
+
+			}
+
+
+			protected function coffeeClickHandler(event:MouseEvent):void
+			{
+				var coffeeData:CoffeeListData = new CoffeeListData(event.target.label as String)
+				this.coffeeList.addItem(coffeeData);
+				Alert.show("Created a concrete class Beverage : "+event.target.label,"Concrete Class created!");
+			}
+			
+
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:layout>
+		<s:VerticalLayout paddingTop="20" paddingLeft="20"/>
+	</s:layout>
+	<s:HGroup>
+		<view:CoffeeButton label="Espresso" click="coffeeClickHandler(event)"/>
+		<view:CoffeeButton label="Decaf" click="coffeeClickHandler(event)"/>
+		<view:CoffeeButton label="Dark Roast" click="coffeeClickHandler(event)"/>
+		<view:CoffeeButton label="House Blend" click="coffeeClickHandler(event)"/>
+	</s:HGroup>
+	<view:StarBuzzGrid id="coffeeGrid" dataProvider="{coffeeList}" alternatingItemColors="[#4682B4, #1E90FF]" selectionColor="#ADFF2F">
+		<view:groupedColumns>
+			<mx:AdvancedDataGridColumn dataField="itemNumber" headerText="Item Number"/>
+			<mx:AdvancedDataGridColumn dataField="description" headerText="Item Name"/>
+			<mx:AdvancedDataGridColumnGroup headerText="Add on">
+				<mx:AdvancedDataGridColumn headerText="{Constants.MILK}" itemRenderer="org.praxis.patterns.decorator.view.renderers.CoffeeAdonsRenderer"/>
+				<mx:AdvancedDataGridColumn headerText="{Constants.MOCHA}" itemRenderer="org.praxis.patterns.decorator.view.renderers.CoffeeAdonsRenderer"/>
+				<mx:AdvancedDataGridColumn headerText="{Constants.SOY}" itemRenderer="org.praxis.patterns.decorator.view.renderers.CoffeeAdonsRenderer"/>
+				<mx:AdvancedDataGridColumn headerText="{Constants.WHIP}" itemRenderer="org.praxis.patterns.decorator.view.renderers.CoffeeAdonsRenderer"/>
+			</mx:AdvancedDataGridColumnGroup>
+			<mx:AdvancedDataGridColumn headerText="Description" dataField="description"/>
+			<mx:AdvancedDataGridColumn headerText="Cost" dataField="cost"/>
+		</view:groupedColumns>
+	</view:StarBuzzGrid>
+	
+</s:Application>

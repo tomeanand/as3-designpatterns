@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600" xmlns:view="org.praxis.patterns.observer.view.*" xmlns:comp="org.praxis.patterns.observer.view.comp.*"
+			   creationComplete="creationCompleteHandler(event)" viewSourceURL="srcview/index.html">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import org.praxis.patterns.observer.core.MeteorologicalDept;
+			import org.praxis.patterns.observer.core.Observer;
+			import org.praxis.patterns.observer.view.WeatherWidget;
+			
+			private var mtdpt:MeteorologicalDept;
+			private var widgetCount:Number = 0;
+
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+				mtdpt = new MeteorologicalDept();
+				
+				var widget:WeatherWidget;
+				for(var i:Number = 0; i<6; i++)	{
+					widgetCount ++;
+					widget = new WeatherWidget();
+					widget.addEventListener("Register",registerHandler);
+					widget.title = "Weather Widget "+ widgetCount
+					mtdpt.registerObserver(widget);
+					tileGrp.addElement(widget);
+				}
+			}
+			
+			private function addNewObserver():void	{
+				widgetCount ++;
+				var widget:WeatherWidget = new WeatherWidget();
+				widget.addEventListener("Register",registerHandler);
+				mtdpt.registerObserver(widget);
+				widget.title = "Weather Widget "+ widgetCount
+				tileGrp.addElement(widget);
+			}
+			
+			private function registerHandler(event:Event):void	{
+				if(event.currentTarget.doRegister == "Register")	{
+					mtdpt.removeObserver(event.currentTarget as Observer);
+				}
+				else	{
+					mtdpt.registerObserver(event.currentTarget as Observer);
+				}
+			}
+
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:VGroup>
+		<s:Button label="Add new Observer - Weather Widget" click="addNewObserver()"/>
+		<s:TileGroup id="tileGrp" />
+	</s:VGroup>
+	
+</s:Application>

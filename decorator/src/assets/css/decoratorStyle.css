@@ -1,0 +1,8 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+@namespace view "org.praxis.patterns.decorator.view.*";
+
+
+
+view|CoffeeButton{skin-class:ClassReference("org.praxis.patterns.decorator.view.skins.CoffeeButtonSkin")}
